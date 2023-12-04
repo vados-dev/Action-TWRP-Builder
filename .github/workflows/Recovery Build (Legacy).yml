@@ -11,6 +11,10 @@ on:
         description: 'MANIFEST_BRANCH'
         required: true
         default: 'twrp-7.1'
+      RELEASES_REPO: 
+        description: 'RELEASES_REPO'
+        required: true
+        default: 'ZH-XiJun/Action-TWRP-Builder'
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
@@ -166,4 +170,4 @@ jobs:
           Target: ${{ github.event.inputs.BUILD_TARGET }}.img
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        GITHUB_REPOSITORY: ${{ github.event.inputs.DEVICE_TREE_URL }}
+        GITHUB_REPOSITORY: ${{ github.event.inputs.RELEASES_REPO }}
