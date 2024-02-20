@@ -12,10 +12,6 @@ on:
         description: 'MANIFEST_BRANCH'
         required: true
         default: 'twrp-7.1'
-      RELEASES_REPO: 
-        description: 'RELEASES_REPO'
-        required: true
-        default: 'ZH-XiJun/Action-TWRP-Builder'
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
@@ -28,12 +24,12 @@ on:
         description: 'DEVICE_PATH'
         required: true
         default: 'device/'
-#      COMMON_TREE_URL:
-#        description: 'COMMON_TREE_URL (if no common tree, leave blank)'
-#        required: false
-#      COMMON_PATH:
-#        description: 'COMMON_PATH (if no common tree, leave blank)'
-#        required: false
+      COMMON_TREE_URL:
+        description: 'COMMON_TREE_URL (if no common tree, leave blank)'
+        required: false
+      COMMON_PATH:
+        description: 'COMMON_PATH (if no common tree, leave blank)'
+        required: false
       DEVICE_NAME:
         description: 'DEVICE_NAME'
         required: true
@@ -165,7 +161,7 @@ jobs:
           workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*vendor*.img
         name: ${{ github.event.inputs.DEVICE_NAME }}-${{ github.run_id }}
         tag_name: ${{ github.run_id }}
-        repository: ${{ github.event.inputs.RELEASES_REPO }}
+        repository: ZH_XiJun/Action-TWRP-Builder
         body: |
           Manifest: ${{ github.event.inputs.MANIFEST_BRANCH }}
           Device: ${{ github.event.inputs.DEVICE_NAME }}
