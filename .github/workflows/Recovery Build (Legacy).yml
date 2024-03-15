@@ -145,9 +145,6 @@ jobs:
         # sudo ln -s /usr/bin/python3 /usr/bin/python3
       continue-on-error: true
     
-#    - name: Setup Debug Session
-#      uses: csexton/debugger-action@master
-    
     - name: Building recovery
       run: |
         source build/envsetup.sh
@@ -170,3 +167,7 @@ jobs:
           Target: ${{ github.event.inputs.BUILD_TARGET }}.img
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      continue-on-error: true
+
+    - name: Setup Debug Session
+      uses: csexton/debugger-action@master
