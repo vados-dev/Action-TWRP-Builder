@@ -167,7 +167,6 @@ jobs:
           Target: ${{ github.event.inputs.BUILD_TARGET }}.img
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      continue-on-error: true
 
-    - name: Setup Debug Session
-      uses: csexton/debugger-action@master
+#    - name: Setup Debug Session
+#      uses: csexton/debugger-action@master
