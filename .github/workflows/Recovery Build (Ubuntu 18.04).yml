@@ -1,4 +1,4 @@
-name: Recovery Build (Legacy)
+name: Recovery Build (Ubuntu 18.04)
 permissions:
   contents: write
 on:
