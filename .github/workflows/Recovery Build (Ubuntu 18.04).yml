@@ -96,7 +96,6 @@ jobs:
     - name: Install repo
       run: |
         sudo ln -sf /usr/bin/python3 /usr/bin/python
-        sudo chmod +x /usr/bin/repo
         mkdir ~/bin
         curl https://storage.googleapis.com/git-repo-downloads/repo > ~/bin/repo
         chmod a+x ~/bin/repo
