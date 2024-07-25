@@ -141,10 +141,6 @@ jobs:
         sudo rm -f /usr/bin/python /usr/bin/python3.6 /usr/bin/python3.6m /usr/local/bin/python
         sudo ln -sf /usr/bin/python2.7 /usr/bin/python
       continue-on-error: true
-
-    - name: Debug before building (Tmate)
-      uses: mxschmitt/action-tmate@v1
-      if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
     
     - name: Building recovery
       shell: bash
