@@ -51,7 +51,7 @@ jobs:
     container:
       image: ghcr.io/catthehacker/ubuntu:runner-18.04
     env:
-      LC_ALL: "C"
+      LC_ALL: "C.UTF-8"
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
     - name: Display Run Parameters
@@ -68,6 +68,9 @@ jobs:
  
     - name: Check Out
       uses: actions/checkout@v3
+
+    - name: Debug before building (Tmate)
+      uses: mxschmitt/action-tmate@v1
 
     - name: test
       run: |
