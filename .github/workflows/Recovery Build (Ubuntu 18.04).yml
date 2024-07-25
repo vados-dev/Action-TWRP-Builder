@@ -38,11 +38,6 @@ on:
         description: 'MAKEFILE_NAME'
         required: true
         default: 'omni_'
-      debug_enabled:
-        type: boolean
-        description: 'Debug before building'
-        required: false
-        default: false
 
 jobs:
   build:
@@ -68,14 +63,6 @@ jobs:
  
     - name: Check Out
       uses: actions/checkout@v3
-
-    - name: Debug before building (Tmate)
-      uses: mxschmitt/action-tmate@v2
-
-    - name: test
-      run: |
-        locale
-        rm fuckyou
 
     # Cleanup The Actions Workspace Using Custom Composite Run Actions
     - name: Cleanup
@@ -171,6 +158,8 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: | 
+          workspace/external/selinux/libselinux/src/getenforce.c*
+          workspace/system/core/init/init.c*
           workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/${{ github.event.inputs.BUILD_TARGET }}.img
           workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
           workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*vendor*.img
