@@ -172,6 +172,3 @@ jobs:
           Target: ${{ github.event.inputs.BUILD_TARGET }}.img
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-#    - name: Setup Debug Session
-#      uses: csexton/debugger-action@master
