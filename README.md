@@ -4,11 +4,17 @@
 
 ---
 
-## OrangeFox is [here](https://github.com/azwhikaru/Action-OFRP-Builder)
+## OrangeFox is [here](https://github.com/ZH-XiJun/Action-OFRP-Builder)
 
 ---
 
-## I can't help you with Device Tree problems! Issues that do not indicate script errors will be closed!
+## Changes ahead of [azwhikaru/Action-TWRP-Builder](https://github.com/azwhikaru/Action-TWRP-Builder)
+
+- Added `Recovery Build (Ubuntu 18.04)` in order to make recovery for old version of Android (Kitkat, Lollipop etc.)
+- Optimized the body of releases.
+- ...
+
+**[RECOVERY BUILD](.github/workflows/Recovery%20Build.yml) MAY NOT UP TO DATE SINCE I DONT HAVE ANDROID DEVICE HIGHER THAN ANDROID Q!**
 
 ---
 
