@@ -144,6 +144,9 @@ jobs:
         sudo ln -s /usr/bin/python2 /usr/bin/python
         # sudo ln -s /usr/bin/python3 /usr/bin/python3
       continue-on-error: true
+
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
     
     - name: Building recovery
       run: |
@@ -152,9 +155,6 @@ jobs:
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make ${{ github.event.inputs.BUILD_TARGET }}image -j$(nproc --all)
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
       continue-on-error: true
-
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
 
     - name: Upload to Release
       uses: softprops/action-gh-release@v2
