@@ -148,7 +148,7 @@ jobs:
       continue-on-error: true
 
     - name: Debug before building
-      uses: mxschmitt/action-tmate@v3
+      uses: mxschmitt/action-tmate@v2
       if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
     
     - name: Building recovery
@@ -160,7 +160,7 @@ jobs:
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Debug after building
-      uses: mxschmitt/action-tmate@v3
+      uses: mxschmitt/action-tmate@v2
       if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
     - name: Upload to Release
