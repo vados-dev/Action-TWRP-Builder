@@ -38,11 +38,6 @@ on:
         description: 'MAKEFILE_NAME'
         required: true
         default: 'omni_'
-      debug_enabled:
-        type: boolean
-        description: 'Debug before and after building'
-        required: false
-        default: false
 
 jobs:
   build:
@@ -146,10 +141,6 @@ jobs:
         sudo rm -f /usr/bin/python /usr/bin/python3.6 /usr/bin/python3.6m /usr/local/bin/python
         sudo ln -sf /usr/bin/python2.7 /usr/bin/python
       continue-on-error: true
-
-    - name: Debug before building
-      uses: mxschmitt/action-tmate@v2
-      if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
     
     - name: Building recovery
       shell: bash
@@ -158,10 +149,6 @@ jobs:
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make recoveryimage -j$(nproc --all)
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
-
-    - name: Debug after building
-      uses: mxschmitt/action-tmate@v2
-      if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
