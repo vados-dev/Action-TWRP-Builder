@@ -121,9 +121,9 @@ jobs:
         wget ${{ inputs.IMG_URL }} ./1.img
         build/tools/device/mkvendor.sh ${{ inputs.DEVICE_MANUFACTURER }} ${{ inputs.DEVICE_NAME }} ./1.img
         tree device
-      workimg-directory: workspace
+      working-directory: workspace
 
-    - name: Force stpp
+    - name: Force stop
       run: fuckyou
 
     - name: Clone device tree
