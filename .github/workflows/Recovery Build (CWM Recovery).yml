@@ -114,22 +114,12 @@ jobs:
       run: |
         repo sync -j$(nproc --all) --force-sync
       working-directory: workspace
-      
-    - name: Make device tree
-      run: | 
-        make -j$(nproc --all) otatools
-        wget ${{ inputs.IMG_URL }} ./1.img
-        build/tools/device/mkvendor.sh ${{ inputs.DEVICE_MANUFACTURER }} ${{ inputs.DEVICE_NAME }} ./1.img
-        tree device
-      working-directory: workspace
-
-    - name: Force stop
-      run: fuckyou
 
     - name: Clone device tree
       run: |
         git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
+      continue-on-error: true
 
     - name: Clone common tree
       if: |
@@ -138,6 +128,7 @@ jobs:
       run: |
         git clone ${{ github.event.inputs.COMMON_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.COMMON_PATH }}
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
+      continue-on-error: true
 
     - name: Sync Device Dependencies
       run: |
@@ -157,6 +148,8 @@ jobs:
         sudo ln -sf /usr/bin/python2.7 /usr/bin/python
       continue-on-error: true
     
+    - name: Make device tree                       run: |                                         make -j$(nproc --all) otatools               wget ${{ inputs.IMG_URL }} ./1.img           build/tools/device/mkvendor.sh ${{ inputs.DEVICE_MANUFACTURER }} ${{ inputs.DEVICE_NAME }} ./1.img                                     tree device                                working-directory: workspace
+
     - name: Building recovery
       shell: bash
       run: |
