@@ -1,4 +1,4 @@
-+name: Recovery Build (CWM Recovery)
+name: Recovery Build (CWM Recovery)
 permissions:
   contents: write
 on:
