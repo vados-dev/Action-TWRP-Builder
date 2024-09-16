@@ -70,7 +70,7 @@ jobs:
 
     # Cleanup The Actions Workspace Using Custom Composite Run Actions
     - name: Cleanup
-      run: du |sort -nr|more && apt list --installed
+      run: du / |sort -nr|more && apt list --installed
       # That's it! Now use your normal steps
 
     - name: force stop
