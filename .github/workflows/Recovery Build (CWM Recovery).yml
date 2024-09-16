@@ -12,6 +12,10 @@ on:
         description: 'MANIFEST_BRANCH'
         required: true
         default: 'cm-11.0'
+      IMG_URL:
+        description: 'IMG_URL'
+        required: true
+        default: 'https://github.com/ZH-XiJun/action_sprd_signer/raw/main/recovery.img'
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL'
         required: true
@@ -114,7 +118,7 @@ jobs:
     - name: Make device tree
       run: | 
         make -j$(nproc --all) otatools
-        wget ${{ github.event.inputs.IMG_URL }} ./1.img
+        wget ${{ inputs.IMG_URL }} ./1.img
         build/tools/device/mkvendor.sh ${{ inputs.DEVICE_MANUFACTURER }} ${{ inputs.DEVICE_NAME }} ./1.img
         tree device
       workimg-directory: workspace
