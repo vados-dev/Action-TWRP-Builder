@@ -49,6 +49,8 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ghcr.io/catthehacker/ubuntu:runner-18.04
+      volumes:
+        - /:/test
     env:
       LC_ALL: "C.UTF-8"
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
@@ -69,7 +71,7 @@ jobs:
       uses: actions/checkout@v3
 
     # Cleanup The Actions Workspace Using Custom Composite Run Actions
-    - name: Cleanup
+    - name: Debug
       uses: mxschmitt/action-tmate@v3.13
       # That's it! Now use your normal steps
 
