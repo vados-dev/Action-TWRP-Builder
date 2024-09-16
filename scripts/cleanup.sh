@@ -98,9 +98,9 @@ for i in ${retain}; do
     echo -e "[!] Invalid Input: ${i}, Ignoring..." && continue
   fi
   export retain_${i}="true" && echo -e "[i] Retaining: ${i}"
-  export retain_docker_buildkit="true"
-  export retain_docker_imgcache='true'
 done
+export retain_docker_buildkit="true"
+export retain_docker_imgcache='true'
 
 echo "::group::<{[<]}> Raw Disk Space Before Cleanup <{[>]}>"
 df --sync -BM --output=pcent,used,avail /
