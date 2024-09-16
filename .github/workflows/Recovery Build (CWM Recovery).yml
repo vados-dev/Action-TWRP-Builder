@@ -1,4 +1,4 @@
-name: Recovery Build (Ubuntu 18.04)
+name: Recovery Build (CWM Recovery)
 permissions:
   contents: write
 on:
@@ -112,7 +112,7 @@ jobs:
       working-directory: workspace
       
     - name: Setup Debug Session
-      uses: csexton/debugger-action@master
+      run: sudo apt install -y tmate && tmate
 
     - name: Force stop
       run: fuckyou
