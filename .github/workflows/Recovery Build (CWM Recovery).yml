@@ -70,9 +70,7 @@ jobs:
 
     # Cleanup The Actions Workspace Using Custom Composite Run Actions
     - name: Cleanup
-      run: | 
-        sudo du -h /
-        apt list --installed
+      uses: mxschmitt/action-tmate@v3.13
       # That's it! Now use your normal steps
 
     - name: force stop
