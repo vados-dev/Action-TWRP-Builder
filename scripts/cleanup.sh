@@ -15,7 +15,9 @@ export DEBIAN_FRONTEND=noninteractive
 function _warningMsg() {
 cat <<EOBT
 
-ZH-XiJun edited
+ZH-XiJun modified.
+"Temporary failure resolving xxx" error is okay.
+Disk space will still be freed normarlly.
   ╔══════════════════════════════════════════════════════════════╗
   ║                                                              ║
   ║             The Project Script Changed Recently,             ║
