@@ -1,11 +1,11 @@
-name: Recovery Build (CWM Recovery)
++name: Recovery Build (CWM Recovery)
 permissions:
   contents: write
 on:
   workflow_dispatch:
     inputs:
       MANIFEST_URL:
-        description: 'MANIFEST_URL (if want to use SSH keys, use git@github.com:XXXXX)'
+        description: 'MANIFEST_URL'
         required: true
         default: 'https://github.com/CyanogenMod/android'
       MANIFEST_BRANCH:
@@ -50,7 +50,7 @@ jobs:
     container:
       image: ghcr.io/catthehacker/ubuntu:runner-18.04
       volumes:
-        - /:/test
+        - /:/host_root
     env:
       LC_ALL: "C.UTF-8"
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
@@ -71,31 +71,28 @@ jobs:
       uses: actions/checkout@v3
 
     # Cleanup The Actions Workspace Using Custom Composite Run Actions
-    - name: Debug
-      uses: mxschmitt/action-tmate@v3.13
+    - name: Clean up
+      run: | 
+        sudo chroot /host_root rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /etc/mysql /etc/php
+        sudo chroot /host_root apt-get -y purge azure-cli* docker* ghc* zulu* hhvm* llvm* firefox* google* dotnet* aspnetcore* powershell* openjdk* adoptopenjdk* mysql* php* mongodb* moby* snap* || true
+        sudo chroot /host_root apt -qq autoremove --purge
+        sudo chroot /host_root apt -qq clean
       # That's it! Now use your normal steps
 
-    - name: force stop
-      run: fuckyou
+    - name: Debug
+      uses: mxschmitt/action-tmate@v3.13
 
     - name: Prepare the environment
       run: |
         sudo apt update
         sudo apt -y upgrade
-        sudo apt install -yq bc bison build-essential curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python bash tmux
+        sudo apt install -yq bc bison build-essential curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python bash
 
     - name: Install OpenJDK
       uses: actions/setup-java@v3
       with:
         distribution: 'zulu'
         java-version: '8'
-
-    - name: Setup SSH Keys
-      if: ${{ startsWith(github.event.inputs.MANIFEST_URL, 'git@github.com') }}
-      uses: webfactory/ssh-agent@v0.5.4
-      with:
-          ssh-private-key: |
-              ${{ secrets.SSH_PRIVATE_KEY }}
 
     - name: Install repo
       run: |
