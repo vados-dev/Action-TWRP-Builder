@@ -119,10 +119,9 @@ jobs:
       working-directory: workspace
 
     - name: Clone device tree
-      run: |
-        git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
+      if: inputs.DEVICE_TREE_URL != null && inputs.IMG_URL == null
+      run: git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
-      continue-on-error: true
 
     - name: Clone common tree
       if: |
@@ -151,6 +150,7 @@ jobs:
         sudo ln -sf /usr/bin/python2.7 /usr/bin/python
     
     - name: Make device tree
+      if: inputs.IMG_URL != null && inputs.DEVICE_TREE_URL == null
       run: |
         make -j$(nproc --all) otatools
         export PATH=$(pwd)/out/host/linux-x86/bin:$PATH
@@ -166,7 +166,9 @@ jobs:
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch cm_${{ inputs.DEVICE_NAME }}-eng && make clean && make recoveryimage -j$(nproc --all)
+        lunch cm_${{ inputs.DEVICE_NAME }}-eng
+        make clean
+        make recoveryimage -j$(nproc --all)
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
       continue-on-error: true
 
