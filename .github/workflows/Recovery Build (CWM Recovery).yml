@@ -153,8 +153,9 @@ jobs:
     - name: Make device tree
       run: |
         make -j$(nproc --all) otatools
+        export PATH=$(pwd)/out/host/linux-x86/bin:$PATH
         wget ${{ inputs.IMG_URL }} -O ./1.img
-        sudo build/tools/device/mkvendor.sh ${{ inputs.DEVICE_MANUFACTURER }} ${{ inputs.DEVICE_NAME }} ./1.img
+        build/tools/device/mkvendor.sh ${{ inputs.DEVICE_MANUFACTURER }} ${{ inputs.DEVICE_NAME }} ./1.img
       working-directory: workspace
 
     - name: Debug
