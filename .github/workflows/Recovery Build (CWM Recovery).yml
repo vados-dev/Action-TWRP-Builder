@@ -85,12 +85,12 @@ jobs:
 
     - name: Install Java
       run: |
-        wget https://download.java.net/openjdk/jdk7u75/ri/jdk_ri-7u75-b13-linux-x64-18_dec_2014.tar.gz -O 1.tar.gz
+        wget https://repo.huaweicloud.com/java/jdk/7u80-b15/jdk-7u80-linux-x64.tar.gz -O 1.tar.gz
         tar -xvzf 1.tar.gz -C /github/home
-        echo "PATH=/github/home/java-se-7u75-ri/bin:$PATH" >> "$GITHUB_ENV"
-#        wget https://repo.huaweicloud.com/java/jdk/7u80-b15/jdk-7u80-linux-x64.tar.gz -O 1.tar.gz
-#        echo "PATH=/github/home/jdk1.7.0_80/bin:$PATH" >> "$GITHUB_ENV"
+        echo "PATH=/github/home/jdk1.7.0_80/bin:$PATH" >> "$GITHUB_ENV"
 
+#        wget https://download.java.net/openjdk/jdk7u75/ri/jdk_ri-7u75-b13-linux-x64-18_dec_2014.tar.gz -O 1.tar.gz
+#        echo "PATH=/github/home/java-se-7u75-ri/bin:$PATH" >> "$GITHUB_ENV"
 #      uses: actions/setup-java@v1.4.4
 #      with:
 #        java-version: 1.7
@@ -149,18 +149,16 @@ jobs:
       run: |
         sudo rm -f /usr/bin/python /usr/bin/python3.6 /usr/bin/python3.6m /usr/local/bin/python
         sudo ln -sf /usr/bin/python2.7 /usr/bin/python
-      continue-on-error: true
-
-    - name: Debug
-      uses: mxschmitt/action-tmate@v3.13
     
     - name: Make device tree
       run: |
         make -j$(nproc --all) otatools
         wget ${{ inputs.IMG_URL }} -O ./1.img
         build/tools/device/mkvendor.sh ${{ inputs.DEVICE_MANUFACTURER }} ${{ inputs.DEVICE_NAME }} ./1.img
-        tree device
       working-directory: workspace
+
+    - name: Debug
+      uses: mxschmitt/action-tmate@v3.13
 
     - name: Building recovery
       shell: bash
@@ -169,6 +167,7 @@ jobs:
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make recoveryimage -j$(nproc --all)
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
+      continue-on-error: true
 
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
@@ -177,6 +176,7 @@ jobs:
           workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/recovery.img
           workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*.zip
           workspace/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/*vendor*.img
+          /github/home/*.zip
         name: ${{ github.event.inputs.DEVICE_NAME }}-${{ github.run_id }}
         tag_name: ${{ github.run_id }}
         body: |
