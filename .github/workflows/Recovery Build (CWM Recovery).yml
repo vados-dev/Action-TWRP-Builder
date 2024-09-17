@@ -24,10 +24,6 @@ on:
         description: 'DEVICE_TREE_BRANCH'
         required: true
         default: 'twrp-4.4'
-      DEVICE_PATH:
-        description: 'DEVICE_MANUFACTURER'
-        required: true
-        default: 'philips'
       COMMON_TREE_URL:
         description: 'COMMON_TREE_URL (if no common tree, leave blank)'
         required: false
@@ -38,6 +34,10 @@ on:
         description: 'DEVICE_NAME'
         required: true
         default: 'E517'
+      DEVICE_MANUFACTURER:
+        description: 'DEVICE_MANUFACTURER'
+        required: true
+        default: 'philips'
       MAKEFILE_NAME:
         description: 'MAKEFILE_NAME'
         required: true
