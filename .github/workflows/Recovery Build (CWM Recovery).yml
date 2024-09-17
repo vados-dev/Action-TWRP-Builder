@@ -53,7 +53,6 @@ jobs:
         - /:/host_root
     env:
       LC_ALL: "C.UTF-8"
-      PATH: "/github/home/java-se-7u75-ri/bin:$PATH"
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
     steps:
     - name: Display Run Parameters
