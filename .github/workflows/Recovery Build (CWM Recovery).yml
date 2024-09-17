@@ -158,15 +158,15 @@ jobs:
         build/tools/device/mkvendor.sh ${{ inputs.DEVICE_MANUFACTURER }} ${{ inputs.DEVICE_NAME }} ./1.img
       working-directory: workspace
 
-    - name: Debug
-      uses: mxschmitt/action-tmate@v3.13
+#    - name: Debug
+#      uses: mxschmitt/action-tmate@v3.13
 
     - name: Building recovery
       shell: bash
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make recoveryimage -j$(nproc --all)
+        lunch cm_${{ inputs.DEVICE_NAME }}-eng && make clean && make recoveryimage -j$(nproc --all)
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
       continue-on-error: true
 
