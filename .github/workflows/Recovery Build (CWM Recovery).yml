@@ -119,8 +119,8 @@ jobs:
       working-directory: workspace
 
     - name: Clone device tree
-      if: ${{ inputs.DEVICE_TREE_URL }} != null && ${{ inputs.IMG_URL }} == null
-      run: git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ inputs.DEVICE_MANUFACTURER }}/${{ inputs.DEVICE_NAME }}
+      if: ${{ inputs.DEVICE_TREE_URL }} != null
+      run: git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./device/${{ inputs.DEVICE_MANUFACTURER }}/${{ inputs.DEVICE_NAME }}
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Clone common tree
@@ -150,7 +150,7 @@ jobs:
         sudo ln -sf /usr/bin/python2.7 /usr/bin/python
     
     - name: Make device tree
-      if: ${{ inputs.IMG_URL }} != null && ${{ inputs.DEVICE_TREE_URL }} == null
+      if: ${{ inputs.IMG_URL }} != null
       run: |
         make -j$(nproc --all) otatools
         export PATH=$(pwd)/out/host/linux-x86/bin:$PATH
