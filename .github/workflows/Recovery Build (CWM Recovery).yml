@@ -41,7 +41,7 @@ on:
       MAKEFILE_NAME:
         description: 'MAKEFILE_NAME'
         required: true
-        default: 'omni_'
+        default: 'cm_'
 
 jobs:
   build:
@@ -120,7 +120,7 @@ jobs:
 
     - name: Clone device tree
       if: inputs.DEVICE_TREE_URL != null && inputs.IMG_URL == null
-      run: git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
+      run: git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ inputs.DEVICE_MANUFACTURER }}/${{ inputs.DEVICE_NAME }}
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Clone common tree
@@ -166,7 +166,7 @@ jobs:
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch cm_${{ inputs.DEVICE_NAME }}-eng
+        lunch ${{ inputs.MAKEFILE_NAME }}-eng
         make clean
         make recoveryimage -j$(nproc --all)
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
