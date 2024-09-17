@@ -95,9 +95,6 @@ jobs:
 #      with:
 #        java-version: 1.7
 
-    - name: Debug
-      uses: mxschmitt/action-tmate@v3.13
-
     - name: Install repo
       run: |
         sudo ln -sf /usr/bin/python3 /usr/bin/python
@@ -153,6 +150,9 @@ jobs:
         sudo rm -f /usr/bin/python /usr/bin/python3.6 /usr/bin/python3.6m /usr/local/bin/python
         sudo ln -sf /usr/bin/python2.7 /usr/bin/python
       continue-on-error: true
+
+    - name: Debug
+      uses: mxschmitt/action-tmate@v3.13
     
     - name: Make device tree
       run: |
