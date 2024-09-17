@@ -13,16 +13,16 @@ on:
         required: true
         default: 'cm-11.0'
       IMG_URL:
-        description: 'IMG_URL'
-        required: true
+        description: 'IMG_URL (leave blank if u choose to clone dt'
+        required: false
         default: 'https://github.com/ZH-XiJun/action_sprd_signer/raw/main/recovery.img'
       DEVICE_TREE_URL:
-        description: 'DEVICE_TREE_URL'
-        required: true
+        description: 'DEVICE_TREE_URL (leave blank if u choose to generate dt'
+        required: false
         default: 'https://github.com/zh-xijun/twrp_device_'
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
-        required: true
+        required: false
         default: 'twrp-4.4'
       COMMON_TREE_URL:
         description: 'COMMON_TREE_URL (if no common tree, leave blank)'
