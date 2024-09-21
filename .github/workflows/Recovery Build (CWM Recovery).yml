@@ -150,7 +150,7 @@ jobs:
         sudo ln -sf /usr/bin/python2.7 /usr/bin/python
     
     - name: Make device tree
-      if: ${{ inputs.IMG_URL }} != ''
+      if: inputs.IMG_URL != null
       run: |
         make -j$(nproc --all) otatools
         export PATH=$(pwd)/out/host/linux-x86/bin:$PATH
