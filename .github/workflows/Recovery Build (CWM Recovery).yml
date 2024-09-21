@@ -119,7 +119,7 @@ jobs:
       working-directory: workspace
 
     - name: Clone device tree
-      if: ${{ inputs.DEVICE_TREE_URL }} != null
+      if: inputs.DEVICE_TREE_URL != null
       run: git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./device/${{ inputs.DEVICE_MANUFACTURER }}/${{ inputs.DEVICE_NAME }}
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
@@ -158,8 +158,8 @@ jobs:
         build/tools/device/mkvendor.sh ${{ inputs.DEVICE_MANUFACTURER }} ${{ inputs.DEVICE_NAME }} ./1.img
       working-directory: workspace
 
-#    - name: Debug
-#      uses: mxschmitt/action-tmate@v3.13
+    - name: Debug
+      uses: mxschmitt/action-tmate@v3.13
 
     - name: Building recovery
       shell: bash
