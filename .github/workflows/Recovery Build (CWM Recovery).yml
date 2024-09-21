@@ -15,11 +15,11 @@ on:
       IMG_URL:
         description: 'IMG_URL (leave blank if u choose to clone dt'
         required: false
-        default: 'https://github.com/ZH-XiJun/action_sprd_signer/raw/main/recovery.img'
+        default: ''
       DEVICE_TREE_URL:
         description: 'DEVICE_TREE_URL (leave blank if u choose to generate dt'
         required: false
-        default: 'https://github.com/zh-xijun/twrp_device_'
+        default: ''
       DEVICE_TREE_BRANCH:
         description: 'DEVICE_TREE_BRANCH'
         required: false
