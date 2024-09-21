@@ -13,11 +13,11 @@ on:
         required: true
         default: 'cm-11.0'
       IMG_URL:
-        description: 'IMG_URL (leave blank if u choose to clone dt'
+        description: 'IMG_URL (leave blank if u choose to clone dt)'
         required: false
         default: ''
       DEVICE_TREE_URL:
-        description: 'DEVICE_TREE_URL (leave blank if u choose to generate dt'
+        description: 'DEVICE_TREE_URL (leave blank if u choose to generate dt)'
         required: false
         default: ''
       DEVICE_TREE_BRANCH:
@@ -150,7 +150,7 @@ jobs:
         sudo ln -sf /usr/bin/python2.7 /usr/bin/python
     
     - name: Make device tree
-      if: ${{ inputs.IMG_URL }} != null
+      if: ${{ inputs.IMG_URL }} != ''
       run: |
         make -j$(nproc --all) otatools
         export PATH=$(pwd)/out/host/linux-x86/bin:$PATH
