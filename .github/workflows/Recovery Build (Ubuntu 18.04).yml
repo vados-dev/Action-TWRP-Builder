@@ -60,6 +60,12 @@ jobs:
         echo "Device Name: ${{ github.event.inputs.DEVICE_NAME }}"
         echo "Makefile Name: ${{ github.event.inputs.MAKEFILE_NAME }}"
         echo "::endgroup::"
+
+    - name: Prepare GLIBC 2.238
+      run: |
+        sudo echo deb http://security.debian.org/debian-security buster/updates main>>/etc/apt/sources.list
+        sudo apt update
+        sudo apt install libc6 -y
  
     - name: Check Out
       uses: actions/checkout@v2.7.0
