@@ -38,6 +38,11 @@ on:
         description: 'MAKEFILE_NAME'
         required: true
         default: 'omni_'
+      CLEANUP:
+        description: 'Enable Cleanup action (disable to speed up building)'
+        required: true
+        type: boolean
+        default: 'true'
 
 jobs:
   build:
@@ -61,6 +66,7 @@ jobs:
         echo "Device Path: ${{ github.event.inputs.DEVICE_PATH }}"
         echo "Device Name: ${{ github.event.inputs.DEVICE_NAME }}"
         echo "Makefile Name: ${{ github.event.inputs.MAKEFILE_NAME }}"
+        echo "Enable cleanup: ${{ github.event.inputs.CLEANUP }}"
         echo "::endgroup::"
 
     - name: Prepare the environment
@@ -86,6 +92,7 @@ jobs:
       run: | 
         sudo cp scripts/cleanup.sh /host_root/root
         sudo chroot /host_root /root/cleanup.sh
+      if: ${{ inputs.CLEANUP }}
       # That's it! Now use your normal steps
 
     - name: Install OpenJDK
@@ -155,10 +162,13 @@ jobs:
         sudo ln -sf /usr/bin/python2.7 /usr/bin/python
       continue-on-error: true
 
-    - name: Downgrade GLIBC to 2.27
-      run: |
-        sudo aptitude update
-        sudo aptitude install -y libc6=2.27-3ubuntu1.6
+#    - name: Downgrade GLIBC to 2.27
+#      run: |
+#        sudo aptitude update
+#        sudo aptitude install -y libc6=2.27-3ubuntu1.6
+
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
     
     - name: Building recovery
       shell: bash
