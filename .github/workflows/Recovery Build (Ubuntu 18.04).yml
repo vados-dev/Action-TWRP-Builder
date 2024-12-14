@@ -157,8 +157,8 @@ jobs:
 
     - name: Downgrade GLIBC to 2.27
       run: |
-        aptitude update
-        aptitude install -y libc6=2.27-3ubuntu1.6
+        sudo aptitude update
+        sudo aptitude install -y libc6=2.27-3ubuntu1.6
     
     - name: Building recovery
       shell: bash
