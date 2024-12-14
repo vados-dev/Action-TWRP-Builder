@@ -61,8 +61,11 @@ jobs:
         echo "Makefile Name: ${{ github.event.inputs.MAKEFILE_NAME }}"
         echo "::endgroup::"
 
-    - name: Prepare GLIBC 2.28
+    - name: Prepare the environment
       run: |
+        sudo apt update
+        sudo apt -y upgrade
+        sudo apt install -yq bc bison build-essential curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python bash tmux
         sudo sed -i '$a deb http://security.debian.org/debian-security buster/updates main' /etc/apt/sources.list
         sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 112695A0E562B32A 54404762BBB6E853
         sudo apt update
@@ -70,18 +73,12 @@ jobs:
         sudo sed -i '$d' /etc/apt/sources.list
  
     - name: Check Out
-      uses: actions/checkout@v2.7.0
+      uses: actions/checkout@v4
 
     # Cleanup The Actions Workspace Using Custom Composite Run Actions
     - name: Cleanup
       uses: rokibhasansagar/slimhub_actions@main
       # That's it! Now use your normal steps
-
-    - name: Prepare the environment
-      run: |
-        sudo apt update
-        sudo apt -y upgrade
-        sudo apt install -yq bc bison build-essential curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python bash tmux
 
     - name: Install OpenJDK
       uses: actions/setup-java@v3
