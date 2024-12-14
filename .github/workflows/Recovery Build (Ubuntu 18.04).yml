@@ -64,7 +64,7 @@ jobs:
     - name: Prepare GLIBC 2.28
       run: |
         sudo sed -i '$a deb http://security.debian.org/debian-security buster/updates main' /etc/apt/sources.list
-        sudo apt-key adv --keyserver http://keyserver.ubuntu.com --recv-keys 112695A0E562B32A 54404762BBB6E853
+        sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 112695A0E562B32A 54404762BBB6E853
         sudo apt update
         sudo apt install libc6 -y
         sudo sed -i '$d' /etc/apt/sources.list
