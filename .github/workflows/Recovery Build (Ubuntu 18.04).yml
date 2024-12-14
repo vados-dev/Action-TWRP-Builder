@@ -76,10 +76,10 @@ jobs:
 #      uses: actions/checkout@v4
 
     # Cleanup The Actions Workspace Using Custom Composite Run Actions
-    - name: Cleanup
-      run: | 
-        sudo cp scripts/cleanup.sh /host_root/root
-        sudo chroot /host_root /root/cleanup.sh
+#    - name: Cleanup
+#      run: | 
+#        sudo cp scripts/cleanup.sh /host_root/root
+#        sudo chroot /host_root /root/cleanup.sh
       # That's it! Now use your normal steps
 
     - name: Install OpenJDK
