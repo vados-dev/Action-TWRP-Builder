@@ -166,9 +166,6 @@ jobs:
       run: |
         sudo aptitude update
         echo -e "n\ny\ny\n" sudo aptitude install libc6=2.27-3ubuntu1.6
-
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
     
     - name: Building recovery
       shell: bash
@@ -177,6 +174,9 @@ jobs:
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make recoveryimage -j$(nproc --all)
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
+
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
 
     - name: Upload to Release
       uses: softprops/action-gh-release@v1
