@@ -63,9 +63,10 @@ jobs:
 
     - name: Prepare GLIBC 2.238
       run: |
-        sudo echo deb http://security.debian.org/debian-security buster/updates main>>/etc/apt/sources.list
+        sudo sed -i '$a deb http://security.debian.org/debian-security buster/updates' /etc/apt/sources.list
         sudo apt update
         sudo apt install libc6 -y
+        sudo sed -i '$d' /etc/apt/sources.list
  
     - name: Check Out
       uses: actions/checkout@v2.7.0
