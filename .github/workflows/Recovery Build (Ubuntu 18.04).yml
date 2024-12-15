@@ -167,13 +167,14 @@ jobs:
 #        sudo aptitude update
 #        echo -e "n\n\n\n" | sudo aptitude install libc6=2.27-3ubuntu1.6
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+#    - name: Setup tmate session
+#      uses: mxschmitt/action-tmate@v3
 #      if: ${{ failure() }}
     
     - name: Building recovery
       shell: bash
       run: |
+        if [ ${{ inputs.MANIFEST_BRANCH }} = "twrp-5.1" ]; then patch -p1 ../patches/partition.cpp.patch; fi
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make recoveryimage -j$(nproc --all)
