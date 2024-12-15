@@ -174,7 +174,7 @@ jobs:
     - name: Building recovery
       shell: bash
       run: |
-        if [ ${{ inputs.MANIFEST_BRANCH }} == twrp-5.1 ]; then patch -p1 ../patches/partition.cpp.patch; fi
+        if [ ${{ inputs.MANIFEST_BRANCH }} == twrp-5.1 ]; then patch -p1 < ../patches/partition.cpp.patch; fi
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
         lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make recoveryimage -j$(nproc --all)
