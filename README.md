@@ -25,6 +25,10 @@
 
 ## Release Notes
 ```
+= 2024
+- Added `Recovery Build (Ubuntu 18.04)` and keep maintaining the workflow.
+- Trying to build CWM Recovery, but it seems that my device tree is broken and none of my try was successful. (If u can solve this, pls submit a PR!)
+
 = 2022/10/28
 - OFRP manifest is changed, so not fully support OFRP now (if you can slove this, please submit a pull request!)
 
