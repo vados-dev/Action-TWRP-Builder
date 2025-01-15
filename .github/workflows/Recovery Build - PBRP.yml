@@ -17,23 +17,23 @@ on:
       DEVICE_TREE:
         description: 'Custom Recovery Tree' # Your already made Device Tree for TWRP
         required: true
-        default: 'https://github.com/vados-dev/twrp_device_sprd_HSL67E_G.git'
+        default: 'https://github.com/vados-dev/sl8541e_cus_go.git'
       DEVICE_TREE_BRANCH:
         description: 'Your Custom Recovery Tree Branch' # Your Device Tree Branch, make sure it's right.
         required: true
-        default: 'twrp-9.0'
+        default: 'pbrp'
       DEVICE_NAME:
         description: 'Specify your Device Codename' # As is, just like your PRODUCT_DEVICE in your device tree.
         required: true
-        default: 'HSL67E_G'
+        default: 'sl8541e_cus_go'
       MAKEFILE_NAME:
         description: 'MAKEFILE_NAME'
         required: true
-        default: 'omni_HSL67E_G'
+        default: 'omni_sl8541e_cus_go'
       DEVICE_PATH:
         description: 'Specify your Device Path (Check the DEVICE_PATH in BoardConfig.mk)' # As is, just like your DEVICE_PATH in your BoardConfig.mk
         required: true
-        default: 'device/sprd/HSL67E_G'
+        default: 'device/sprd/sl8541e_cus_go'
       BUILD_TARGET:
         description: 'Specify your Build Target (choose "pbrp" instead of "recovery" for Android 11 or above)' # Pick among boot, recovery and vendor_boot
         required: true
@@ -46,12 +46,12 @@ on:
         - vendorboot
       LDCHECK:
         description: 'Use LDCHECK'
-        required: true
+        required: false
         default: 'false'
         type: boolean
       LDCHECKPATH:
         description: 'Path of blobs to check' # Use it know what kind of dependencies your missing for decryption blobs.
-        required: true
+        required: false
         default: 'vendor/bin/mcDriverDaemon'
 
 jobs:
