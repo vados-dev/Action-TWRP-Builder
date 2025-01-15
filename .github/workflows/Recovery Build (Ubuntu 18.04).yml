@@ -23,7 +23,7 @@ on:
       DEVICE_PATH:
         description: 'DEVICE_PATH'
         required: true
-        default: 'device/sprd/sl8541_cus_go'
+        default: 'device/sprd/sl8541e_cus_go'
       COMMON_TREE_URL:
         description: 'COMMON_TREE_URL (if no common tree, leave blank)'
         required: false
@@ -33,11 +33,11 @@ on:
       DEVICE_NAME:
         description: 'DEVICE_NAME'
         required: true
-        default: 'sl8541_cus_go'
+        default: 'sl8541e_cus_go'
       MAKEFILE_NAME:
         description: 'MAKEFILE_NAME'
         required: true
-        default: 'omni_sl8541_cus_go'
+        default: 'omni_sl8541e_cus_go'
       CLEANUP:
         description: 'Enable Cleanup action (disable to speed up building)'
         required: true
