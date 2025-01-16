@@ -4,6 +4,10 @@ permissions:
 on:
   workflow_dispatch:
     inputs:
+      MANIFEST_URL: 
+        description: 'MANIFEST_URL (if want to use SSH keys, use git@github.com:XXXXX)'
+        required: true
+        default: 'https://github.com/vados-dev/manifest_pb.git'
       MANIFEST_BRANCH:
         description: 'PBRP Manifest Branch'
         required: true
@@ -83,10 +87,14 @@ jobs:
     - name: Display Inputs
       run: |
         echo "Displaying variables/inputs."
+        echo "Manifest URL: ${{ github.event.inputs.MANIFEST_URL }}"
         echo "Manifest Branch: ${{ inputs.MANIFEST_BRANCH }}"
         echo "Device Tree: ${{ inputs.DEVICE_TREE }}"
         echo "Device Branch: ${{ inputs.DEVICE_TREE_BRANCH }}"
-        echo "Build Target: ${{ inputs.BUILD_TARGET }}"
+        echo "Device Path: ${{ github.event.inputs.DEVICE_PATH }}"
+        echo "Device Name: ${{ github.event.inputs.DEVICE_NAME }}"
+        echo "Makefile Name: ${{ github.event.inputs.MAKEFILE_NAME }}"
+        echo "Build Target: ${{ inputs.BUILD_TARGET }}.img"
 
     - name: Cleanup
       uses: rokibhasansagar/slimhub_actions@main
@@ -129,12 +137,13 @@ jobs:
         cd android-recovery
         git config --global user.name "vados-dev"
         git config --global user.email "vados@vados.ru"
-        repo init --depth=1 -u https://github.com/PitchBlackRecoveryProject/manifest_pb.git -b ${{ inputs.MANIFEST_BRANCH }}
+        repo init --depth=1 -u ${{ github.event.inputs.MANIFEST_URL }} -b ${{ inputs.MANIFEST_BRANCH }}
         sed -i 's/android_system_core/android_system_core_old/' .repo/manifests/omni-aosp.xml ;
         sed -i 's/android_frameworks_base/android_frameworks_base_old/' .repo/manifests/omni-aosp.xml ;
         sed -i 's/android_frameworks_base/android_frameworks_base_old/g' .repo/manifests/remove-minimal.xml ;
         sed -i 's/android_frameworks_base/android_frameworks_base_old/' .repo/manifests/twrp-extras.xml ;
       id: pwd
+
     - name: Repo Sync
       run: |
         cd android-recovery
@@ -183,6 +192,9 @@ jobs:
       if: env.CHECK_LEGACY_BRANCH == 'true'
       run: |
         sudo apt-get install python2 python-is-python2
+        sudo rm -f /usr/bin/python /usr/bin/python3.6 /usr/bin/python3.6m /usr/local/bin/python
+        sudo ln -sf /usr/bin/python2.7 /usr/bin/python
+      continue-on-error: true
 
     - name: Building PitchBlack
       shell: bash
