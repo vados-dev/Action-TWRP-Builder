@@ -42,15 +42,21 @@ on:
         - boot
         - recovery
         - vendorboot
-      LDCHECK:
-        description: 'Use LDCHECK'
-        required: false
-        default: false
+      CLEANUP:
+        description: 'Enable Cleanup action (disable to speed up building)'
+        required: true
         type: boolean
-      LDCHECKPATH:
-        description: 'Path of blobs to check' # Use it know what kind of dependencies your missing for decryption blobs.
-        required: false
-        default: 'vendor/bin/mcDriverDaemon'
+        default: true
+
+#      LDCHECK:
+#        description: 'Use LDCHECK'
+#        required: false
+#        default: false
+#        type: boolean
+#      LDCHECKPATH:
+#        description: 'Path of blobs to check' # Use it know what kind of dependencies your missing for decryption blobs.
+#        required: false
+#        default: 'vendor/bin/mcDriverDaemon'
 
 jobs:
   build:
@@ -65,13 +71,27 @@ jobs:
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       GITHUB_TOKEN: ${{ secrets.amster }}
 
-    steps:
+  steps:
+    - name: Display Run Parameters
+      run: |
+        echo "::group::User Environment Variables"
+        echo "Manifest URL: ${{ github.event.inputs.MANIFEST_URL }}"
+        echo "Manifest Branch: ${{ github.event.inputs.MANIFEST_BRANCH }}"
+        echo "Device Tree URL: ${{ github.event.inputs.DEVICE_TREE_URL }}"
+        echo "Device Tree Branch: ${{ github.event.inputs.DEVICE_TREE_BRANCH }}"
+        echo "Device Path: ${{ github.event.inputs.DEVICE_PATH }}"
+        echo "Device Name: ${{ github.event.inputs.DEVICE_NAME }}"
+        echo "Makefile Name: ${{ github.event.inputs.MAKEFILE_NAME }}"
+        uname -a
+      if [ ${{ github.event.inputs.CLEANUP }} == true ]; then echo "Cleanup: Enabled"; else echo "Cleanup: Disabled"; fi
+        echo "::endgroup::"
+
     - name: Prepare the environment
       run: |
-       sudo apt update
-       sudo apt install libc6
-       sudo apt -y upgrade
-       sudo apt install -yq aptitude bc bison build-essential curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python bash tmux
+        sudo apt update
+        sudo apt install libc6
+        sudo apt -y upgrade
+        sudo apt install -yq aptitude bc bison build-essential curl flex g++-multilib gcc-multilib git gnupg gperf imagemagick lib32ncurses5-dev lib32readline-dev lib32z1-dev liblz4-tool libncurses5 libncurses5-dev libsdl1.2-dev libssl-dev libxml2 libxml2-utils lzop pngcrush rsync schedtool squashfs-tools xsltproc zip zlib1g-dev python bash tmux
 
     - name: Upgrade GLIBC to 2.28
       run: |
@@ -84,21 +104,13 @@ jobs:
     - name: Check Out
       uses: actions/checkout@v4
 
-    - name: Display Inputs
-      run: |
-        echo "Displaying variables/inputs."
-        echo "Manifest URL: ${{ github.event.inputs.MANIFEST_URL }}"
-        echo "Manifest Branch: ${{ inputs.MANIFEST_BRANCH }}"
-        echo "Device Tree: ${{ inputs.DEVICE_TREE }}"
-        echo "Device Branch: ${{ inputs.DEVICE_TREE_BRANCH }}"
-        echo "Device Path: ${{ github.event.inputs.DEVICE_PATH }}"
-        echo "Device Name: ${{ github.event.inputs.DEVICE_NAME }}"
-        echo "Makefile Name: ${{ github.event.inputs.MAKEFILE_NAME }}"
-        echo "Build Target: ${{ inputs.BUILD_TARGET }}.img"
-        uname -a
-
+    # Cleanup The Actions Workspace Using Custom Composite Run Actions
     - name: Cleanup
-      uses: rokibhasansagar/slimhub_actions@main
+      run: | 
+        sudo cp scripts/cleanup.sh /host_root/root
+        sudo chroot /host_root /root/cleanup.sh
+      if: ${{ inputs.CLEANUP }}
+      # That's it! Now use your normal steps
       
 #    - name: Set Swap Space
 #      uses: pierotofy/set-swap-space@master
@@ -108,9 +120,9 @@ jobs:
     - name: Check Manifest Branch
       run: |
         if [ ${{ inputs.MANIFEST_BRANCH }} == 'android-11.0' ] || [ ${{ inputs.MANIFEST_BRANCH }} == 'android-12.1' ]; then
-            echo "CHECK_LEGACY_BRANCH=false" >> $GITHUB_ENV
+            echo "CHECK_LEGACY_BRANCH=false" >> $GITHUB_OUTPUT
         else
-            echo "CHECK_LEGACY_BRANCH=true" >> $GITHUB_ENV
+            echo "CHECK_LEGACY_BRANCH=true" >> $GITHUB_OUTPUT
         fi
 
 #    - name: Prepare the environment
@@ -160,7 +172,7 @@ jobs:
     - name: Clone device tree
       run: |
         cd ${{ steps.pwd.outputs.workspace-folder }}
-        git clone ${{ github.event.inputs.DEVICE_TREE_URL }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
+        git clone ${{ github.event.inputs.DEVICE_TREE }} -b ${{ github.event.inputs.DEVICE_TREE_BRANCH }} ./${{ github.event.inputs.DEVICE_PATH }}
         cd ./${{ github.event.inputs.DEVICE_PATH }}
         echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
  
@@ -216,14 +228,14 @@ jobs:
       run: |
         source build/envsetup.sh
         export ALLOW_MISSING_DEPENDENCIES=true
-        lunch ${{ env.DEVICE_MAKEFILE }}-eng && make clean && make ${{ inputs.BUILD_TARGET }}
+        lunch ${{ github.event.inputs.MAKEFILE_NAME }}-eng && make clean && make ${{ inputs.BUILD_TARGET }}
       working-directory: ${{ steps.pwd.outputs.workspace-folder }}
 
     - name: Check Build Makefile
       run: |
-        if [ -f out/target/product/${{ env.DEVICE_NAME }}/recovery.img ]; then
+        if [ -f out/target/product/${{ github.event.inputs.DEVICE_NAME }}/recovery.img ]; then
             echo "BUILD_TARGET_NAME=recovery" >> $GITHUB_ENV
-        elif [ -f out/target/product/${{ env.DEVICE_NAME }}/boot.img ]; then
+        elif [ -f out/target/product/${{ github.event.inputs.DEVICE_NAME }}/boot.img ]; then
             echo "BUILD_TARGET_NAME=boot" >> $GITHUB_ENV
         else
             echo "BUILD_TARGET_NAME=vendor_boot" >> $GITHUB_ENV
@@ -238,23 +250,23 @@ jobs:
       uses: softprops/action-gh-release@master
       with:
         files: |
-          android-recovery/out/target/product/${{ env.DEVICE_NAME }}/${{ env.BUILD_TARGET_NAME }}.img
-          android-recovery/out/target/product/${{ env.DEVICE_NAME }}/PBRP*.zip
-          android-recovery/out/target/product/${{ env.DEVICE_NAME }}/ramdisk-recovery.*
-        name: Unofficial PBRP for ${{ env.DEVICE_NAME }} // ${{ env.BUILD_DATE }}
+          android-recovery/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/${{ env.BUILD_TARGET_NAME }}.img
+          android-recovery/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/PBRP*.zip
+          android-recovery/out/target/product/${{ github.event.inputs.DEVICE_NAME }}/ramdisk-recovery.*
+        name: Unofficial PBRP for ${{ github.event.inputs.DEVICE_NAME }} // ${{ env.BUILD_DATE }}
         tag_name: ${{ github.run_id }}
         body: |
           Build: ${{ inputs.MANIFEST_BRANCH }}
           Device: [Device Tree/Branch](${{ inputs.DEVICE_TREE }}/tree/${{ inputs.DEVICE_TREE_BRANCH }})
           Commit: Most recent [commit](${{ inputs.DEVICE_TREE }}/commit/${{ env.COMMIT_ID }}) during building.
 
-    - name: Run LDCheck
-      if: inputs.LDCHECK == 'true'
-      run: |
-        cd tools
-        mv -n libneeds ${GITHUB_WORKSPACE}/android-recovery/out/target/product/${{ env.DEVICE_NAME }}/recovery/root/
-        mv -n ldcheck ${GITHUB_WORKSPACE}/android-recovery/out/target/product/${{ env.DEVICE_NAME }}/recovery/root/
-        cd ../android-recovery/out/target/product/${{ env.DEVICE_NAME }}/recovery/root
-        python3 ldcheck -p system/lib64:vendor/lib64:system/lib:vendor/lib -d ${{ inputs.LDCHECKPATH }}
-        echo "Done checking missing dependencies. Review, and reconfigure your tree."
-      continue-on-error: true
+#    - name: Run LDCheck
+#      if: inputs.LDCHECK == 'true'
+#      run: |
+#        cd tools
+#        mv -n libneeds ${GITHUB_WORKSPACE}/android-recovery/out/target/product/${{ env.DEVICE_NAME }}/recovery/root/
+#        mv -n ldcheck ${GITHUB_WORKSPACE}/android-recovery/out/target/product/${{ env.DEVICE_NAME }}/recovery/root/
+#        cd ../android-recovery/out/target/product/${{ env.DEVICE_NAME }}/recovery/root
+#        python3 ldcheck -p system/lib64:vendor/lib64:system/lib:vendor/lib -d ${{ inputs.LDCHECKPATH }}
+#        echo "Done checking missing dependencies. Review, and reconfigure your tree."
+#      continue-on-error: true
