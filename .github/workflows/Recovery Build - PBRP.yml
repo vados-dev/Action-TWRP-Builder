@@ -71,7 +71,7 @@ jobs:
       ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
       GITHUB_TOKEN: ${{ secrets.amster }}
 
-  steps:
+    steps:
     - name: Display Run Parameters
       run: |
         echo "::group::User Environment Variables"
@@ -82,8 +82,7 @@ jobs:
         echo "Device Path: ${{ github.event.inputs.DEVICE_PATH }}"
         echo "Device Name: ${{ github.event.inputs.DEVICE_NAME }}"
         echo "Makefile Name: ${{ github.event.inputs.MAKEFILE_NAME }}"
-        uname -a
-      if [ ${{ github.event.inputs.CLEANUP }} == true ]; then echo "Cleanup: Enabled"; else echo "Cleanup: Disabled"; fi
+        if [ ${{ github.event.inputs.CLEANUP }} == true ]; then echo "Cleanup: Enabled"; else echo "Cleanup: Disabled"; fi
         echo "::endgroup::"
 
     - name: Prepare the environment
